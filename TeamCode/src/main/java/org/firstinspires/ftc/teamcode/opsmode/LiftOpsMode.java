@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode.opsmode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+// See RobotAutoDriveByEncoder_Linear for an example on how to use the encoder
+@TeleOp(name="Lift")
 public class LiftOpsMode extends LinearOpMode {
 
     // Declare OpMode members.
@@ -28,12 +23,15 @@ public class LiftOpsMode extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+        liftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         double power = 0.1;
         boolean isDirectionForward = true;
         long begin = System.currentTimeMillis();
+        telemetry.addData("Starting at",  "%7d", liftDrive.getCurrentPosition());
 
         // run until the end of the match (driver presses STOP)
+        liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         while (opModeIsActive()) {
 
             //flip the direction after 1 second
@@ -49,7 +47,7 @@ public class LiftOpsMode extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motor", "lift (%.2f)", liftDrive);
+            telemetry.addData("Encoder at ",  "%7d", liftDrive.getCurrentPosition());
             telemetry.update();
         }
     }
