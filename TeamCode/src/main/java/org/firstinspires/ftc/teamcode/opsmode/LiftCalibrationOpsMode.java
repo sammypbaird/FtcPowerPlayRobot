@@ -25,6 +25,7 @@ public class LiftCalibrationOpsMode extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+
         while (opModeIsActive())
         {
             telemetry.addData("Currently at",  " at %7d", liftDrive.getCurrentPosition());

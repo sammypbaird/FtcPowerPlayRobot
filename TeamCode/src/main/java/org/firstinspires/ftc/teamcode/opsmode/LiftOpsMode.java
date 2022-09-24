@@ -25,6 +25,7 @@ public class LiftOpsMode extends LinearOpMode {
         liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Starting at",  "%7d", liftDrive.getCurrentPosition());
+        telemetry.update();
 
         waitForStart();
         runtime.reset();
@@ -35,15 +36,6 @@ public class LiftOpsMode extends LinearOpMode {
         }
     }
 
-
-    /*
-     *  Method to perform a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
     public void encoderDrive(double speed, int encoderTarget, double timeoutS) {
 
         // Ensure that the opmode is still active
