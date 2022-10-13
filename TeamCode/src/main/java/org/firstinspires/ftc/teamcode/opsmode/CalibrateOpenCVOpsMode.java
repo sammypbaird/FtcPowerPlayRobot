@@ -4,16 +4,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.opencv.TestPipeline;
+import org.firstinspires.ftc.teamcode.opencv.CalibratePipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@TeleOp(name="OpenCV")
-public class OpenCVOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCameraOpenListener {
+@TeleOp(name="OpenCV - Calibrate")
+public class CalibrateOpenCVOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCameraOpenListener {
 
     private OpenCvCamera camera;
+    private CalibratePipeline calibratePipeline = new CalibratePipeline();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -25,8 +25,17 @@ public class OpenCVOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCam
         // With live preview
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
         camera.openCameraDeviceAsync(this);
-        camera.setPipeline(new TestPipeline());
+        camera.setPipeline(calibratePipeline);
         waitForStart();
+        while (opModeIsActive())
+        {
+            double[] hsvValues = calibratePipeline.getHSVValues();
+            telemetry.addData("HSV: ",  "%.3f, %.3f, %.3f", hsvValues[0], hsvValues[1], hsvValues[2]);
+            if (calibratePipeline.getMat() != null) {
+                telemetry.addData("Info on Mat: %d", calibratePipeline.getMat().type());
+            }
+            telemetry.update();
+        }
 
     }
 
