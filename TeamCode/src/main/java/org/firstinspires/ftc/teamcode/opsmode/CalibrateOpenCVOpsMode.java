@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opsmode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,6 +10,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+@Disabled
 @TeleOp(name="OpenCV - Calibrate")
 public class CalibrateOpenCVOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCameraOpenListener {
 
