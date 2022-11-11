@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opsmode;
+package org.firstinspires.ftc.teamcode.opsmode.calibrate;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -28,7 +28,7 @@ public class LiftCalibrationOpsMode extends LinearOpMode {
 
         while (opModeIsActive())
         {
-            telemetry.addData("Currently at",  " at %7d", liftDrive.getCurrentPosition());
+            telemetry.addData("Currently at",  "%7d", liftDrive.getCurrentPosition());
             telemetry.update();
         }
     }
