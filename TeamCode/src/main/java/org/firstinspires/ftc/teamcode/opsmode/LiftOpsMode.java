@@ -15,6 +15,8 @@ public class LiftOpsMode extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor liftDrive;
 
+    //max is 1880
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -31,7 +33,7 @@ public class LiftOpsMode extends LinearOpMode {
         runtime.reset();
 
         for (int i=0; i<5; i++) {
-            encoderDrive(0.1*(i+2), 1000, 5);
+            encoderDrive(0.1*(i+2), 1800, 5);
             encoderDrive(0.1*(i+2), 0, 5);
         }
     }
