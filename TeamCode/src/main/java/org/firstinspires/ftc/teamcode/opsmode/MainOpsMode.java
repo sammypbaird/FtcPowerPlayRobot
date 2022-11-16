@@ -99,7 +99,8 @@ public class MainOpsMode extends LinearOpMode {
 
         //reset the encoder
         liftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftDrive.setPower(SPEED);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -159,17 +160,18 @@ public class MainOpsMode extends LinearOpMode {
 
     private void updateLift() {
         if (gamepad1.a)
-            encoderDrive(SPEED, 0, ENCODER_TIMEOUT);
+            liftDrive.setTargetPosition(0);
         else if (gamepad1.b)
-            encoderDrive(SPEED, JUNCTION_ENCODING_SHORT, ENCODER_TIMEOUT);
+            liftDrive.setTargetPosition(JUNCTION_ENCODING_SHORT);
         else if (gamepad1.x)
-            encoderDrive(SPEED, JUNCTION_ENCODING_MEDIUM, ENCODER_TIMEOUT);
+            liftDrive.setTargetPosition(JUNCTION_ENCODING_MEDIUM);
         else if (gamepad1.y)
-            encoderDrive(SPEED, JUNCTION_ENCODING_TALL, ENCODER_TIMEOUT);
+            liftDrive.setTargetPosition(JUNCTION_ENCODING_TALL);
 
         telemetry.addData("Lift",  " at %7d", liftDrive.getCurrentPosition());
     }
 
+    /*
     public void encoderDrive(double speed, int encoderTarget, double timeoutS) {
 
         // Ensure that the opmode is still active
@@ -209,4 +211,7 @@ public class MainOpsMode extends LinearOpMode {
 
             sleep(250);   // optional pause after each move.
         }
-    }}
+    }
+    */
+ }
+
