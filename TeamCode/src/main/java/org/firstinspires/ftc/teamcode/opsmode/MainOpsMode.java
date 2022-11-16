@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -74,6 +75,7 @@ public class MainOpsMode extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
     private DcMotor liftDrive = null;
+    private Servo claw = null;
 
     private static final double SPEED = 0.5;
     private static final int ENCODER_TIMEOUT = 5;
@@ -90,6 +92,7 @@ public class MainOpsMode extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
         liftDrive = hardwareMap.get(DcMotor.class, "lift_drive");
+        claw = hardwareMap.get(Servo.class, "claw");
 
         //set directions
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -114,6 +117,7 @@ public class MainOpsMode extends LinearOpMode {
 
             updateDriveMotors();
             updateLift();
+            updateClaw();
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
@@ -169,6 +173,16 @@ public class MainOpsMode extends LinearOpMode {
             liftDrive.setTargetPosition(JUNCTION_ENCODING_TALL);
 
         telemetry.addData("Lift",  " at %7d", liftDrive.getCurrentPosition());
+    }
+
+    private void updateClaw() {
+        /* First callibrate
+        if (gamepad1.dpad_down)
+            claw.setPosition(0);
+        else if (gamepad1.dpad_up)
+            claw.setPosition(0.5);*
+
+         */
     }
 
     /*
