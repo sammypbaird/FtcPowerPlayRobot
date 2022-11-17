@@ -78,10 +78,14 @@ public class MainOpsMode extends LinearOpMode {
     private Servo claw = null;
 
     private static final double SPEED = 0.5;
+
+    //All the numbers below should be found through calibration
     private static final int ENCODER_TIMEOUT = 5;
     private static final int JUNCTION_ENCODING_SHORT = 700;
     private static final int JUNCTION_ENCODING_MEDIUM = 1200;
     private static final int JUNCTION_ENCODING_TALL = 1700;
+    private static final double CLAW_POSITION_CLOSED = 0;
+    private static final double CLAW_POSITION_OPENED = 0.5;
 
     @Override
     public void runOpMode() {
@@ -108,7 +112,6 @@ public class MainOpsMode extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
         waitForStart();
         runtime.reset();
 
@@ -178,9 +181,9 @@ public class MainOpsMode extends LinearOpMode {
     private void updateClaw() {
         /* First callibrate
         if (gamepad1.dpad_down)
-            claw.setPosition(0);
+            claw.setPosition(CLAW_POSITION_CLOSED);
         else if (gamepad1.dpad_up)
-            claw.setPosition(0.5);*
+            claw.setPosition(CLAW_POSITION_OPENED);*
 
          */
     }

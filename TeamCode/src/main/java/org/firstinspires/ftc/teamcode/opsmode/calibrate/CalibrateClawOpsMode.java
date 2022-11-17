@@ -5,31 +5,25 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Disabled
-@TeleOp(name="Calibrate Servo")
-public class CalibrateServoOpsMode extends LinearOpMode {
+@TeleOp(name="Calibrate Claw")
+public class CalibrateClawOpsMode extends LinearOpMode {
 
-    Servo leftClaw;
-    Servo rightClaw;
+    Servo claw;
 
     @Override
     public void runOpMode() throws InterruptedException {
         //initialization
-        leftClaw = hardwareMap.get(Servo.class, "claw_left");
-        rightClaw = hardwareMap.get(Servo.class, "claw_right");
+        claw = hardwareMap.get(Servo.class, "claw");
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         waitForStart();
 
-        double leftClawPosition = leftClaw.getPosition();
-        double rightClawPosition = rightClaw.getPosition();
+        double clawPosition = claw.getPosition();
 
         while (opModeIsActive()) {
-            telemetry.addData("Left claw: ", "%7d", leftClawPosition);
-            telemetry.addData("Right claw: ", "%7d", rightClawPosition);
+            telemetry.addData("Claw Position: ", "%7d", clawPosition);
         }
-
     }
 }
