@@ -20,10 +20,12 @@ public class CalibrateClawOpsMode extends LinearOpMode {
 
         waitForStart();
 
-        double clawPosition = claw.getPosition();
+        double clawPosition;
 
         while (opModeIsActive()) {
-            telemetry.addData("Claw Position: ", "%7d", clawPosition);
+            clawPosition = claw.getPosition();
+            telemetry.addData("Claw Position", "%7f", clawPosition);
+            telemetry.update();
         }
     }
 }
