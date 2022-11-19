@@ -86,6 +86,7 @@ public class MainOpsMode extends LinearOpMode {
     private static final int JUNCTION_ENCODING_TALL = 6800;
     private static final double CLAW_POSITION_CLOSED = 1.0;
     private static final double CLAW_POSITION_OPENED = 0.5;
+    private int liftPosition = 0;
 
     @Override
     public void runOpMode() {
@@ -167,23 +168,37 @@ public class MainOpsMode extends LinearOpMode {
     }
 
     private void updateLift() {
-        if (gamepad1.a)
-            liftDrive.setTargetPosition(0);
-        else if (gamepad1.b)
-            liftDrive.setTargetPosition(JUNCTION_ENCODING_SHORT);
-        else if (gamepad1.x)
-            liftDrive.setTargetPosition(JUNCTION_ENCODING_MEDIUM);
-        else if (gamepad1.y)
-            liftDrive.setTargetPosition(JUNCTION_ENCODING_TALL);
+        if (gamepad2.dpad_up || gamepad2.dpad_down) {
+            liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            if (gamepad1.dpad_up) {
+                liftDrive.setPower(1);
+            } else if (gamepad1.dpad_down) {
+                liftDrive.setPower(-1);
+            }
+        } else {
+            liftDrive.setPower(0);
+            liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            if (gamepad2.a)
+                liftPosition = 0;
+            else if (gamepad2.b)
+                liftPosition = JUNCTION_ENCODING_SHORT;
+            else if (gamepad2.x)
+                liftPosition = JUNCTION_ENCODING_MEDIUM;
+            else if (gamepad2.y)
+                liftPosition = JUNCTION_ENCODING_TALL;
+
+            liftDrive.setTargetPosition(liftPosition);
+        }
 
         telemetry.addData("Lift",  " at %7d", liftDrive.getCurrentPosition());
     }
 
     private void updateClaw() {
         // First callibrate
-        if (gamepad1.dpad_down)
+        if (gamepad2.left_bumper)
             claw.setPosition(CLAW_POSITION_CLOSED);
-        else if (gamepad1.dpad_up)
+        else if (gamepad2.right_bumper)
             claw.setPosition(CLAW_POSITION_OPENED);
 
     }
