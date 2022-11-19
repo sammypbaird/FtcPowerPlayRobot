@@ -195,7 +195,7 @@ public class MainOpsMode extends LinearOpMode {
 
             //if (liftDrive.getCurrentPosition() <= JUNCTION_ENCODING_TALL) {
             liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            liftDrive.setPower(gamepad2.left_stick_y);
+            liftDrive.setPower(-gamepad2.left_stick_y);
         } else {
             liftDrive.setTargetPosition(liftDrive.getCurrentPosition());
             liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
