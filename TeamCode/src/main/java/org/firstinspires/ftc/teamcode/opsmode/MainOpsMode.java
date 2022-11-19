@@ -77,14 +77,14 @@ public class MainOpsMode extends LinearOpMode {
     private DcMotor liftDrive = null;
     private Servo claw = null;
 
-    private static final double SPEED = 0.5;
+    private static final double SPEED = 1.0;
 
     //All the numbers below should be found through calibration
     private static final int ENCODER_TIMEOUT = 5;
-    private static final int JUNCTION_ENCODING_SHORT = 700;
-    private static final int JUNCTION_ENCODING_MEDIUM = 1200;
-    private static final int JUNCTION_ENCODING_TALL = 1700;
-    private static final double CLAW_POSITION_CLOSED = 0;
+    private static final int JUNCTION_ENCODING_SHORT = 2500;
+    private static final int JUNCTION_ENCODING_MEDIUM = 4000;
+    private static final int JUNCTION_ENCODING_TALL = 6800;
+    private static final double CLAW_POSITION_CLOSED = 1.0;
     private static final double CLAW_POSITION_OPENED = 0.5;
 
     @Override
@@ -106,6 +106,7 @@ public class MainOpsMode extends LinearOpMode {
 
         //reset the encoder
         liftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftDrive.setTargetPosition(0);
         liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftDrive.setPower(SPEED);
 
@@ -179,13 +180,12 @@ public class MainOpsMode extends LinearOpMode {
     }
 
     private void updateClaw() {
-        /* First callibrate
+        // First callibrate
         if (gamepad1.dpad_down)
             claw.setPosition(CLAW_POSITION_CLOSED);
         else if (gamepad1.dpad_up)
-            claw.setPosition(CLAW_POSITION_OPENED);*
+            claw.setPosition(CLAW_POSITION_OPENED);
 
-         */
     }
 
     /*
