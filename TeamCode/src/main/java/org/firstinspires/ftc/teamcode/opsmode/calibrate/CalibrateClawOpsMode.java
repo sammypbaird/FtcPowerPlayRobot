@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class CalibrateClawOpsMode extends LinearOpMode {
 
     Servo claw;
+    double servoPosition = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -20,12 +21,17 @@ public class CalibrateClawOpsMode extends LinearOpMode {
 
         waitForStart();
 
-        double clawPosition;
-
         while (opModeIsActive()) {
-            clawPosition = claw.getPosition();
-            telemetry.addData("Claw Position", "%7f", clawPosition);
+
+            if (gamepad1.dpad_up)
+                servoPosition += 0.001;
+            else if (gamepad1.dpad_down)
+                servoPosition -= 0.001;
+
+            claw.setPosition(servoPosition);
+            telemetry.addData("Claw Position: ", "%4.2f", claw.getPosition());
             telemetry.update();
+
         }
     }
 }

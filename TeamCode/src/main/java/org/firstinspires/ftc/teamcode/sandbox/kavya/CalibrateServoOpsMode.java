@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name="Calibrate Servo Kavya")
 public class CalibrateServoOpsMode extends LinearOpMode {
     Servo claw;
+    int servoPosition = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -21,10 +22,21 @@ public class CalibrateServoOpsMode extends LinearOpMode {
 
         waitForStart();
 
-        double clawPosition = claw.getPosition();
-
         while (opModeIsActive()) {
-            telemetry.addData("Claw Position: ", "%7d", clawPosition);
+
+            if (gamepad1.dpad_up)
+                servoPosition += 0.01;
+            else if (gamepad1.dpad_down)
+                servoPosition -= 0.01;
+
+            if (servoPosition > 1)
+                servoPosition = 1;
+            if (servoPosition < -1)
+                servoPosition = -1;
+
+            claw.setPosition(servoPosition);
+            telemetry.addData("Claw Position: ", "%7d", claw.getPosition());
+
         }
     }
 }

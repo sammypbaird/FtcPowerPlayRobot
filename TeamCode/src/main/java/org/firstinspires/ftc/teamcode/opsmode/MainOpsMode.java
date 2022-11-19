@@ -83,9 +83,10 @@ public class MainOpsMode extends LinearOpMode {
     private static final int ENCODER_TIMEOUT = 5;
     private static final int JUNCTION_ENCODING_SHORT = 3500;
     private static final int JUNCTION_ENCODING_MEDIUM = 5000;
-    private static final int JUNCTION_ENCODING_TALL = 7000;
-    private static final double CLAW_POSITION_CLOSED = 1.0;
-    private static final double CLAW_POSITION_OPENED = 0.6;
+    private static final int JUNCTION_ENCODING_TALL = 6800;
+    private static final double CLAW_POSITION_CLOSED = 0.55;
+    private static final double CLAW_POSITION_OPENED = 0.75;
+    private static final double LIFT_MOTOR_SPEED = 1.0;
     private int liftPosition = 0;
 
     @Override
@@ -137,6 +138,20 @@ public class MainOpsMode extends LinearOpMode {
         double lateral = gamepad1.left_stick_x;
         double yaw = gamepad1.right_stick_x;
 
+        //fine control using dpad and bumpers
+        if (gamepad1.dpad_up)
+            axial += 0.3;
+        if (gamepad1.dpad_down)
+            axial -= 0.3;
+        if (gamepad1.dpad_left)
+            lateral -= 0.3;
+        if (gamepad1.dpad_right)
+            lateral += 0.3;
+        if (gamepad1.left_bumper)
+            yaw -= 0.3;
+        if (gamepad1.right_bumper)
+            yaw += 0.3;
+
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
         double leftFrontPower = axial + lateral + yaw;
@@ -169,21 +184,35 @@ public class MainOpsMode extends LinearOpMode {
 
     private void updateLift() {
 
-        if (gamepad2.dpad_up) {
-            if (liftDrive.getCurrentPosition() <= JUNCTION_ENCODING_TALL) {
-                liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                liftDrive.setPower(1);
-            }
-        }
-        else if (gamepad2.dpad_down) {
-            if (liftDrive.getCurrentPosition() >= 0) {
-                liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                liftDrive.setPower(-1);
+        //while right trigger is pressed, do manual control
+        if (Math.abs(gamepad2.right_trigger) > 0.5) {
+            if (gamepad2.dpad_up) {
+                //if (liftDrive.getCurrentPosition() <= JUNCTION_ENCODING_TALL) {
+                    liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    liftDrive.setPower(LIFT_MOTOR_SPEED);
+                //}
+            } else if (gamepad2.dpad_down) {
+                //if (liftDrive.getCurrentPosition() >= 0) {
+                    liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    liftDrive.setPower(-1 * LIFT_MOTOR_SPEED);
+                //}
+            } else {
+                liftDrive.setTargetPosition(liftDrive.getCurrentPosition());
+                liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
         }
         else {
+            /*
+            if (gamepad1.a)
+                liftDrive.setTargetPosition(0);
+            else if (gamepad1.b)
+                liftDrive.setTargetPosition(JUNCTION_ENCODING_SHORT);
+            else if (gamepad1.x)
+                liftDrive.setTargetPosition(JUNCTION_ENCODING_MEDIUM);
+            else if (gamepad1.y)
+                liftDrive.setTargetPosition(JUNCTION_ENCODING_TALL);
             liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftDrive.setTargetPosition(liftDrive.getCurrentPosition());
+             */
         }
 
         telemetry.addData("Lift",  " at %7d", liftDrive.getCurrentPosition());
