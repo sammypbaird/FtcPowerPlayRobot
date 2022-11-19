@@ -81,11 +81,11 @@ public class MainOpsMode extends LinearOpMode {
 
     //All the numbers below should be found through calibration
     private static final int ENCODER_TIMEOUT = 5;
-    private static final int JUNCTION_ENCODING_SHORT = 2500;
-    private static final int JUNCTION_ENCODING_MEDIUM = 4000;
-    private static final int JUNCTION_ENCODING_TALL = 6800;
+    private static final int JUNCTION_ENCODING_SHORT = 3500;
+    private static final int JUNCTION_ENCODING_MEDIUM = 5000;
+    private static final int JUNCTION_ENCODING_TALL = 7000;
     private static final double CLAW_POSITION_CLOSED = 1.0;
-    private static final double CLAW_POSITION_OPENED = 0.5;
+    private static final double CLAW_POSITION_OPENED = 0.6;
     private int liftPosition = 0;
 
     @Override
@@ -168,27 +168,22 @@ public class MainOpsMode extends LinearOpMode {
     }
 
     private void updateLift() {
-        if (gamepad2.dpad_up || gamepad2.dpad_down) {
-            liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            if (gamepad1.dpad_up) {
+
+        if (gamepad2.dpad_up) {
+            if (liftDrive.getCurrentPosition() <= JUNCTION_ENCODING_TALL) {
+                liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 liftDrive.setPower(1);
-            } else if (gamepad1.dpad_down) {
+            }
+        }
+        else if (gamepad2.dpad_down) {
+            if (liftDrive.getCurrentPosition() >= 0) {
+                liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 liftDrive.setPower(-1);
             }
-        } else {
-            liftDrive.setPower(0);
+        }
+        else {
             liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            if (gamepad2.a)
-                liftPosition = 0;
-            else if (gamepad2.b)
-                liftPosition = JUNCTION_ENCODING_SHORT;
-            else if (gamepad2.x)
-                liftPosition = JUNCTION_ENCODING_MEDIUM;
-            else if (gamepad2.y)
-                liftPosition = JUNCTION_ENCODING_TALL;
-
-            liftDrive.setTargetPosition(liftPosition);
+            liftDrive.setTargetPosition(liftDrive.getCurrentPosition());
         }
 
         telemetry.addData("Lift",  " at %7d", liftDrive.getCurrentPosition());
