@@ -11,7 +11,6 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Disabled
 @TeleOp(name="OpenCV")
 public class OpenCVOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCameraOpenListener {
 
@@ -19,7 +18,7 @@ public class OpenCVOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCam
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        TestPipeline pipeline = new TestPipeline();
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "webcam");
@@ -27,22 +26,24 @@ public class OpenCVOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCam
         // With live preview
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
         camera.openCameraDeviceAsync(this);
-        camera.setPipeline(new TestPipeline());
+        camera.setPipeline(pipeline);
         waitForStart();
-
+        while (opModeIsActive()) {
+            double size = pipeline.getLargestShapeSize();
+            telemetry.addData("Size: ",  "%.3f", size);
+            telemetry.update();
+        }
     }
 
     @Override
-    public void onOpened()
-    {
+    public void onOpened() {
         telemetry.addData("Status", "Webcam initialized");
         telemetry.update();
         camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
     }
 
     @Override
-    public void onError(int errorCode)
-    {
+    public void onError(int errorCode) {
         telemetry.addData("Status", "Error initializing camera");
         telemetry.update();
     }

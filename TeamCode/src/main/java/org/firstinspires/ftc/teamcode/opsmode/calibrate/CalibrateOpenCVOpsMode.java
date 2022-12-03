@@ -10,7 +10,6 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Disabled
 @TeleOp(name="OpenCV - Calibrate")
 public class CalibrateOpenCVOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCameraOpenListener {
 
