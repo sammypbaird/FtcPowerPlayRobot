@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 // See RobotAutoDriveByEncoder_Linear for an example on how to use the encoder
 @TeleOp(name="Calibrate Lift")
-public class LiftCalibrationOpsMode extends LinearOpMode {
+public class CalibrateLiftOpsMode extends LinearOpMode {
 
     // Declare OpMode members.
     private DcMotor liftDrive;
