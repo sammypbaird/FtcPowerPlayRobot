@@ -18,7 +18,7 @@ public class CalibrateOdometryOpsMode extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            
+
             telemetry.update();
 
         }
