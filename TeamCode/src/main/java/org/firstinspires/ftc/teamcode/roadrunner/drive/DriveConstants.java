@@ -82,12 +82,12 @@ public class DriveConstants {
      * The maximum acceleration is somewhat arbitrary and it is recommended that you tweak this yourself based on
      * actual testing. Just set it at a reasonable value and keep increasing until your path following starts
      * to degrade. As of now, it simply mirrors the velocity, resulting in 36.58665032249647 in/s/s
-     *
+     *git
      * Maximum Angular Velocity is calculated as: maximum velocity / trackWidth * (180 / Math.PI) but capped at 360°/s.
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 36.58665032249647;
+    public static double MAX_VEL = 22.5006;
     public static double MAX_ACCEL = 36.58665032249647;
     public static double MAX_ANG_VEL = Math.toRadians(154.1368125);
     public static double MAX_ANG_ACCEL = Math.toRadians(154.1368125);
