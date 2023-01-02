@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.opencv;
 
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -12,17 +14,13 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestPipeline extends OpenCvPipeline
+public class SignalPipeline extends OpenCvPipeline
 {
-    //Constants
-    private static final double[] SIGNAL_1_HUE = new double[]{170, 180}; //red
-    private static final double[] SIGNAL_2_HUE = new double[]{25, 35}; //yellow
-    private static final double[] SIGNAL_3_HUE = new double[]{108, 118}; //blue
-    
+
     // Notice this is declared as an instance variable (and re-used), not a local variable
     Mat hsvMat = new Mat();
     Mat hierarchyMat = new Mat();
-
+    Mat mask = new Mat();
     private Signal displayedSignal = null;
 
     //configurations
@@ -33,12 +31,20 @@ public class TestPipeline extends OpenCvPipeline
     @Override
     public Mat processFrame(Mat input)
     {
+        int size = 30;
+        Rect rect = new Rect(((input.width() - size) / 2), (input.height() - size) / 2, size, size);
+        Mat mask = new Mat(input.rows(), input.cols(), CvType.CV_8U, Scalar.all(0));
+        Imgproc.rectangle(mask, rect, new Scalar(255, 255, 255), -1, 8, 0);
+        Mat cropped = new Mat();
+        input.copyTo(cropped, mask);
+        Imgproc.rectangle(input, rect, new Scalar(0, 255, 0), 1, 8, 0);
+
         //convert color to HSV space
-        Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2HSV);
+        Imgproc.cvtColor(cropped, hsvMat, Imgproc.COLOR_RGB2HSV);
         
-        double largestShapeSignal1 = getLargestSizeByHue(SIGNAL_1_HUE[0], SIGNAL_1_HUE[1]);
-        double largestShapeSignal2 = getLargestSizeByHue(SIGNAL_2_HUE[0], SIGNAL_2_HUE[1]);
-        double largestShapeSignal3 = getLargestSizeByHue(SIGNAL_3_HUE[0], SIGNAL_3_HUE[1]);
+        double largestShapeSignal1 = getLargestSizeByHue(Signal.ONE.getHueMin(), Signal.ONE.getHueMax());
+        double largestShapeSignal2 = getLargestSizeByHue(Signal.TWO.getHueMin(), Signal.TWO.getHueMax());
+        double largestShapeSignal3 = getLargestSizeByHue(Signal.THREE.getHueMin(), Signal.THREE.getHueMax());
 
         if (largestShapeSignal1 >= largestShapeSignal2 && largestShapeSignal1 >= largestShapeSignal3) {
             displayedSignal = Signal.ONE;
@@ -46,7 +52,10 @@ public class TestPipeline extends OpenCvPipeline
             displayedSignal = Signal.TWO;
         } else if (largestShapeSignal3 >= largestShapeSignal1 && largestShapeSignal3 >= largestShapeSignal2) {
             displayedSignal = Signal.THREE;
+        } else {
+            displayedSignal = Signal.ONE;
         }
+
 
         //combine the mask and the original image
 //        Mat dest = new Mat();

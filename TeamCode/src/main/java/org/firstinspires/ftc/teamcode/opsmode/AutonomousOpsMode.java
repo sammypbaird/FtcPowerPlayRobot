@@ -13,73 +13,96 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 // for opencv
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.opencv.Signal;
-import org.firstinspires.ftc.teamcode.opencv.TestPipeline;
+import org.firstinspires.ftc.teamcode.opencv.SignalPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * This is a simple routine to test translational drive capabilities.
  */
 @Config
 @Autonomous(group = "drive")
-public class AutonomousOpsMode extends LinearOpMode {
-    public static double DISTANCE = 23.75; // in
-    private OpenCvCamera camera;
-    @Override
-    public void runOpMode() throws InterruptedException {
-    	// init cam and pipeline
-    	TestPipeline pipeline = new TestPipeline();
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCameraOpenListener {
 
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "webcam");
-        Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+	public static double DISTANCE = 23.75; // in
+	private OpenCvCamera camera;
+	Signal signal;
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-	// get color 
-	Signal displayedSignal = pipeline.getDisplayedSignal();
-	// determine where to move 
-	switch(displayedSignal.getColor()){
-	// defined by locations on page 46 of Game Maunal part 2
-		case 1: // red
-			Trajectory forwardTrajectory = drive.trajectoryBuilder(new Pose2d())
-				.forward(DISTANCE)
-				.build();
-			Trajectory strafeTrajectory = drive.trajectoryBuilder(new Pose2d())
-				.strafeLeft(DISTANCE)
-				.build();
-			break;
-		case 2: // yellow
-			Trajectory forwardTrajectory = drive.trajectoryBuilder(new Pose2d())
-				.forward(DISTANCE)
-				.build();
-			break;
-		case 3: // blue
-			Trajectory forwardTrajectory = drive.trajectoryBuilder(new Pose2d())
-				.forward(DISTANCE)
-				.build();
-			Trajectory strafeTrajectory = drive.trajectoryBuilder(new Pose2d())
-				.strafeRight(DISTANCE)
-				.build();
-			break;
+	@Override
+	public void runOpMode() throws InterruptedException {
+		// init cam and pipeline
+		SignalPipeline pipeline = new SignalPipeline();
+
+		//initialize camera
+		int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+		WebcamName webcamName = hardwareMap.get(WebcamName.class, "webcam");
+
+		// Create live preview in init mode
+		camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+		camera.openCameraDeviceAsync(this);
+		camera.setPipeline(pipeline);
+		while(!isStarted())
+		{
+			signal = pipeline.getDisplayedSignal();
+			if (signal != null) {
+				telemetry.addData("Signal: ", signal.getColor());
+				telemetry.update();
+			}
+		}
+
+		waitForStart();
+
+		Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+		SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+		// determine where to move
+		List<Trajectory> trajectories = createTrajectoriesFromSignal(signal, drive);
+		if (isStopRequested()) return;
+
+		for (Trajectory trajectory:trajectories) {
+			drive.followTrajectory(trajectory);
+		}
+
+		Pose2d poseEstimate = drive.getPoseEstimate();
+		telemetry.addData("Signal: ", signal.getColor());
+		telemetry.update();
+
+		while (!isStopRequested() && opModeIsActive()) ;
 	}
-        
-        
 
-        waitForStart();
+	private List<Trajectory> createTrajectoriesFromSignal(Signal signal, SampleMecanumDrive drive) {
+		List<Trajectory> trajectories = new ArrayList<>();
+		switch (signal) {
+			// defined by locations on page 46 of Game Maunal part 2
+			case ONE: // green
+				trajectories.add(drive.trajectoryBuilder(new Pose2d()).forward(DISTANCE).build());
+				trajectories.add(drive.trajectoryBuilder(new Pose2d()).strafeLeft(DISTANCE).build());
+				break;
+			case TWO: // purple
+				trajectories.add(drive.trajectoryBuilder(new Pose2d()).forward(DISTANCE).build());
+				break;
+			case THREE: // orange
+				trajectories.add(drive.trajectoryBuilder(new Pose2d()).forward(DISTANCE).build());
+				trajectories.add(drive.trajectoryBuilder(new Pose2d()).strafeRight(DISTANCE).build());
+				break;
+		}
+		return trajectories;
+	}
 
-        if (isStopRequested()) return;
+	@Override
+	public void onOpened() {
+		telemetry.addData("Status", "Webcam initialized");
+		telemetry.update();
+		camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+	}
 
-        drive.followTrajectory(forwardTrajectory);
-        if(strafeTrajectory != NULL)
-        	drive.followTrajectory(strafeTrajectory);
-
-        Pose2d poseEstimate = drive.getPoseEstimate();
-        telemetry.addData("finalX", poseEstimate.getX());
-        telemetry.addData("finalY", poseEstimate.getY());
-        telemetry.addData("finalHeading", poseEstimate.getHeading());
-        telemetry.update();
-
-        while (!isStopRequested() && opModeIsActive()) ;
-    }
+	@Override
+	public void onError(int errorCode) {
+		telemetry.addData("Status", "Error initializing camera");
+		telemetry.update();
+	}
 }
