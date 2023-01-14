@@ -29,11 +29,9 @@
 
 package org.firstinspires.ftc.teamcode.opsmode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -76,6 +74,7 @@ public class MainOpsMode extends LinearOpMode {
     private DcMotor rightBackDrive = null;
     private DcMotor liftDrive = null;
     private Servo claw = null;
+    private Servo wrist = null;
 
     private static final double SPEED = 1.0;
 
@@ -84,8 +83,8 @@ public class MainOpsMode extends LinearOpMode {
     private static final int JUNCTION_ENCODING_SHORT = 3500;
     private static final int JUNCTION_ENCODING_MEDIUM = 5000;
     private static final int JUNCTION_ENCODING_TALL = 6800;
-    private static final double CLAW_POSITION_CLOSED = 0.50;
-    private static final double CLAW_POSITION_OPENED = 0.75;
+    private static final double CLAW_POSITION_OPEN = 0.4;
+    private static final double CLAW_POSITION_CLOSED = 0.7;
     private static final double LIFT_MOTOR_SPEED = 1.0;
     private static final double DRIVE_SPEED = 0.6;
     private int liftPosition = 0;
@@ -100,6 +99,7 @@ public class MainOpsMode extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
         liftDrive = hardwareMap.get(DcMotor.class, "lift_drive");
         claw = hardwareMap.get(Servo.class, "claw");
+        wrist = hardwareMap.get(Servo.class, "wrist");
 
         //set directions
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -214,11 +214,17 @@ public class MainOpsMode extends LinearOpMode {
 
     private void updateClaw() {
         // First callibrate
-        if (gamepad2.left_bumper)
-            claw.setPosition(CLAW_POSITION_CLOSED);
+        if (gamepad2.left_bumper) {
+            claw.setPosition(CLAW_POSITION_OPEN);
+            telemetry.addData("Button", "Left bumper");
+            telemetry.update();
+        }
         else if (gamepad2.right_bumper)
-            claw.setPosition(CLAW_POSITION_OPENED);
+            claw.setPosition(CLAW_POSITION_CLOSED);
 
+        if (gamepad2.b) {
+            wrist.setPosition(0.5);
+        }
     }
 
     /*
