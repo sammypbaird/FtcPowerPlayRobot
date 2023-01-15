@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.opencv.SignalPipeline2;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 // for opencv
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -35,7 +36,7 @@ public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.Asyn
 	@Override
 	public void runOpMode() throws InterruptedException {
 		// init cam and pipeline
-		SignalPipeline pipeline = new SignalPipeline();
+		SignalPipeline2 pipeline = new SignalPipeline2();
 
 		//initialize camera
 		int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -55,7 +56,7 @@ public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.Asyn
 		}
 
 		waitForStart();
-		signal = pipeline.getDisplayedSignal();
+		signal = pipeline.getSignal();
 		telemetry.addData("Signal: ", signal.getColor());
 		telemetry.addData("Hue: ", pipeline.getSignalHue());
 		telemetry.update();
@@ -101,7 +102,8 @@ public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.Asyn
 	public void onOpened() {
 		telemetry.addData("Status", "Webcam initialized");
 		telemetry.update();
-		camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+		//widescreen webcams are 16:9 ratio
+		camera.startStreaming(426, 240, OpenCvCameraRotation.UPRIGHT);
 	}
 
 	@Override

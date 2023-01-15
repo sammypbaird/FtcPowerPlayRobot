@@ -22,8 +22,8 @@ public class SignalPipeline extends OpenCvPipeline
     Mat hsvMat = new Mat();
     Mat hierarchyMat = new Mat();
     Mat mask = new Mat();
-    private Signal displayedSignal = null;
-    private double dispHue = 0;
+    private Signal signal = null;
+    private double signalHue = 0;
     //configurations
     int erosionKernelSize = 1;
     int dilationKernelSize = 4;
@@ -51,26 +51,23 @@ public class SignalPipeline extends OpenCvPipeline
 
         //convert color to HSV space
         Imgproc.cvtColor(cropped, hsvMat, Imgproc.COLOR_RGB2HSV);
-        // get value
-        dispHue = hsvMat.get(input.height() / 2, input.width() / 2)[0];
+
+        // get value at the center pixel
+        signalHue = hsvMat.get(input.height() / 2, input.width() / 2)[0];
+
+        //find the largest shape using different hue masks
         double largestShapeSignal1 = getLargestSizeByHue(Signal.ONE.getHueMin(), Signal.ONE.getHueMax());
         double largestShapeSignal2 = getLargestSizeByHue(Signal.TWO.getHueMin(), Signal.TWO.getHueMax());
         double largestShapeSignal3 = getLargestSizeByHue(Signal.THREE.getHueMin(), Signal.THREE.getHueMax());
 
         if (largestShapeSignal1 >= largestShapeSignal2 && largestShapeSignal1 >= largestShapeSignal3) {
-            displayedSignal = Signal.ONE;
+            signal = Signal.ONE;
         } else if (largestShapeSignal2 >= largestShapeSignal1 && largestShapeSignal2 >= largestShapeSignal3) {
-            displayedSignal = Signal.TWO;
+            signal = Signal.TWO;
         } else if (largestShapeSignal3 >= largestShapeSignal1 && largestShapeSignal3 >= largestShapeSignal2) {
-            displayedSignal = Signal.THREE;
-        } else {
-            
+            signal = Signal.THREE;
         }
 
-
-        //combine the mask and the original image
-//        Mat dest = new Mat();
-//        Core.bitwise_and(input, input, dest, hsvThresholdMat);
         return input;
     }
 
@@ -108,7 +105,10 @@ public class SignalPipeline extends OpenCvPipeline
     }
 
     public Signal getSignal() {
-        return displayedSignal;
+        return signal;
     }
-    public double getSignalHue(){return this.dispHue;}
+
+    public double getSignalHue(){
+        return this.signalHue;
+    }
 }
