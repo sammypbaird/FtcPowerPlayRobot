@@ -23,7 +23,7 @@ public class SignalPipeline extends OpenCvPipeline
     Mat hierarchyMat = new Mat();
     Mat mask = new Mat();
     private Signal displayedSignal = null;
-
+    private double dispHue = 0;
     //configurations
     int erosionKernelSize = 1;
     int dilationKernelSize = 4;
@@ -51,7 +51,8 @@ public class SignalPipeline extends OpenCvPipeline
 
         //convert color to HSV space
         Imgproc.cvtColor(cropped, hsvMat, Imgproc.COLOR_RGB2HSV);
-        
+        // get value
+        dispHue = hsvMat.get(input.height() / 2, input.width() / 2)[0];
         double largestShapeSignal1 = getLargestSizeByHue(Signal.ONE.getHueMin(), Signal.ONE.getHueMax());
         double largestShapeSignal2 = getLargestSizeByHue(Signal.TWO.getHueMin(), Signal.TWO.getHueMax());
         double largestShapeSignal3 = getLargestSizeByHue(Signal.THREE.getHueMin(), Signal.THREE.getHueMax());
@@ -63,7 +64,7 @@ public class SignalPipeline extends OpenCvPipeline
         } else if (largestShapeSignal3 >= largestShapeSignal1 && largestShapeSignal3 >= largestShapeSignal2) {
             displayedSignal = Signal.THREE;
         } else {
-            displayedSignal = Signal.ONE;
+            
         }
 
 
@@ -109,4 +110,5 @@ public class SignalPipeline extends OpenCvPipeline
     public Signal getSignal() {
         return displayedSignal;
     }
+    public double getSignalHue(){return this.dispHue;}
 }
