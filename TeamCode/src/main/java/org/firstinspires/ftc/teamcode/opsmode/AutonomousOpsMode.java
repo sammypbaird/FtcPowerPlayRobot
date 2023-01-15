@@ -46,7 +46,9 @@ public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.Asyn
 		camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
 		camera.openCameraDeviceAsync(this);
 		camera.setPipeline(pipeline);
-		while(!isStarted() && signal == null) {
+
+		//continually update the signal while waiting for the start button
+		while(!isStarted()) {
 			signal = pipeline.getSignal();
 			if (signal != null) {
 				telemetry.addData("Signal: ", signal.getColor());
@@ -55,8 +57,10 @@ public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.Asyn
 			}
 		}
 
-		waitForStart();
-		signal = pipeline.getSignal();
+		//if for some reason we still have no signal, just go to signal 2
+		if (signal == null)
+			signal = Signal.TWO;
+
 		telemetry.addData("Signal: ", signal.getColor());
 		telemetry.addData("Hue: ", pipeline.getSignalHue());
 		telemetry.update();
@@ -71,10 +75,6 @@ public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.Asyn
 		for (Trajectory trajectory:trajectories) {
 			drive.followTrajectory(trajectory);
 		}
-
-		Pose2d poseEstimate = drive.getPoseEstimate();
-		telemetry.addData("Signal: ", signal.getColor());
-		telemetry.update();
 
 		while (!isStopRequested() && opModeIsActive()) ;
 	}
