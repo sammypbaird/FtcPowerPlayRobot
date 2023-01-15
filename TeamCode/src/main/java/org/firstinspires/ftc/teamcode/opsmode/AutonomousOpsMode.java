@@ -45,16 +45,20 @@ public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.Asyn
 		camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
 		camera.openCameraDeviceAsync(this);
 		camera.setPipeline(pipeline);
-		while(!isStarted())
-		{
+		while(!isStarted() && signal == null) {
 			signal = pipeline.getDisplayedSignal();
 			if (signal != null) {
 				telemetry.addData("Signal: ", signal.getColor());
+				telemetry.addData("Hue: ", pipeline.getSignalHue());
 				telemetry.update();
 			}
 		}
 
 		waitForStart();
+		signal = pipeline.getDisplayedSignal();
+		telemetry.addData("Signal: ", signal.getColor());
+		telemetry.addData("Hue: ", pipeline.getSignalHue());
+		telemetry.update();
 
 		Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 		SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);

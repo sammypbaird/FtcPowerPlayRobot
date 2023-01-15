@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.opencv;
 
 public enum Signal {
-    ONE(1, "Signal 1", "green",86),
-    TWO(2, "Signal 2", "purple",125),
-    THREE(3, "Signal 3", "orange",5);
+    ONE(1, "Signal 1", "green",78),
+    TWO(2, "Signal 2", "purple",136),
+    THREE(3, "Signal 3", "orange",14);
 
     private final int id;
     private final String name;
@@ -30,10 +30,10 @@ public enum Signal {
     }
 
     public int getHueMax(){
-        return hue + 10;
+        return hue + 20;
     }
     public int getHueMin(){
-        return hue - 10;
+        return hue - 20;
     }
 
 }
