@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 // for opencv
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.opencv.Signal;
+import org.firstinspires.ftc.teamcode.objects.Signal;
 import org.firstinspires.ftc.teamcode.opencv.SignalPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -47,7 +47,7 @@ public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.Asyn
 		camera.setPipeline(pipeline);
 		while(!isStarted())
 		{
-			signal = pipeline.getDisplayedSignal();
+			signal = pipeline.getSignal();
 			if (signal != null) {
 				telemetry.addData("Signal: ", signal.getColor());
 				telemetry.update();

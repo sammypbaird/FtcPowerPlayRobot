@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.opencv.Signal;
+import org.firstinspires.ftc.teamcode.objects.Signal;
 import org.firstinspires.ftc.teamcode.opencv.SignalPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -28,7 +28,7 @@ public class OpenCVOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCam
         camera.setPipeline(pipeline);
         waitForStart();
         while (opModeIsActive()) {
-            Signal displayedSignal = pipeline.getDisplayedSignal();
+            Signal displayedSignal = pipeline.getSignal();
             if (displayedSignal != null) {
                 telemetry.addData("Color: ", displayedSignal.getColor());
             }

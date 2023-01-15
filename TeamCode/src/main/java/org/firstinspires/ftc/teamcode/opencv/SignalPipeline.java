@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opencv;
 
+import org.firstinspires.ftc.teamcode.objects.Signal;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -31,13 +32,22 @@ public class SignalPipeline extends OpenCvPipeline
     @Override
     public Mat processFrame(Mat input)
     {
+
         int size = 30;
-        Rect rect = new Rect(((input.width() - size) / 2), (input.height() - size) / 2, size, size);
+        Rect square = new Rect(((input.width() - size) / 2), (input.height() - size) / 2, size, size);
+
+        //create a mat for a mask, initializing all the values to 0
         Mat mask = new Mat(input.rows(), input.cols(), CvType.CV_8U, Scalar.all(0));
-        Imgproc.rectangle(mask, rect, new Scalar(255, 255, 255), -1, 8, 0);
+
+        //Fill a small square in the middle of the mask with white pixels
+        Imgproc.rectangle(mask, square, new Scalar(255, 255, 255), -1, 8, 0);
+
+        //Apply the mask to the input image, resulting in keeping just the square in the middle
         Mat cropped = new Mat();
         input.copyTo(cropped, mask);
-        Imgproc.rectangle(input, rect, new Scalar(0, 255, 0), 1, 8, 0);
+
+        //Draw a rectangle on the input image (just to help in previewing the image)
+        Imgproc.rectangle(input, square, new Scalar(0, 255, 0), 1, 8, 0);
 
         //convert color to HSV space
         Imgproc.cvtColor(cropped, hsvMat, Imgproc.COLOR_RGB2HSV);
@@ -96,7 +106,7 @@ public class SignalPipeline extends OpenCvPipeline
         return getLargestContourSize(contourPoints);
     }
 
-    public Signal getDisplayedSignal() {
+    public Signal getSignal() {
         return displayedSignal;
     }
 }

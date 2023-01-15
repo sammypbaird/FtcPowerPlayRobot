@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opencv;
+package org.firstinspires.ftc.teamcode.objects;
 
 public enum Signal {
     ONE(1, "Signal 1", "green",86),
@@ -27,6 +27,10 @@ public enum Signal {
 
     public String getColor() {
         return color;
+    }
+
+    public int getHue() {
+        return hue;
     }
 
     public int getHueMax(){
