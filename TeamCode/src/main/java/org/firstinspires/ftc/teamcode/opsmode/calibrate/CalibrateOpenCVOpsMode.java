@@ -45,7 +45,7 @@ public class CalibrateOpenCVOpsMode extends LinearOpMode implements OpenCvCamera
     {
         telemetry.addData("Status", "Webcam initialized");
         telemetry.update();
-        camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+        camera.startStreaming(432, 240, OpenCvCameraRotation.UPRIGHT);
     }
 
     @Override

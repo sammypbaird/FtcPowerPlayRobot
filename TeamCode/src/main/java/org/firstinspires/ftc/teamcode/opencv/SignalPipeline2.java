@@ -32,7 +32,7 @@ public class SignalPipeline2 extends OpenCvPipeline
 
         //blur the image
         Mat blurredImage = new Mat();
-        Imgproc.GaussianBlur(input, blurredImage, new Size(10, 10), 0);
+        Imgproc.GaussianBlur(input, blurredImage, new Size(9, 9), 0);
 
         //Draw a rectangle on the input image (just to help in previewing the image)
         Imgproc.rectangle(input, square, new Scalar(0, 255, 0), 1, 8, 0);
@@ -54,13 +54,19 @@ public class SignalPipeline2 extends OpenCvPipeline
         double closestHueDifference = 180;
         Signal closestSignal = Signal.ONE;
         for (Signal s : Signal.values()) {
-            double diff = Math.abs(s.getHue() - signalHue);
+            double diff = getHueDifference(s.getHue(), signalHue);
             if (diff < closestHueDifference) {
                 closestHueDifference = diff;
                 closestSignal = s;
             }
         }
         return closestSignal;
+    }
+
+    private double getHueDifference(double hue1, double hue2) {
+        double diff1 = Math.abs(hue1-hue2);
+        double diff2 = Math.abs(hue1-(hue2-180));
+        return Math.min(diff1, diff2);
     }
 
     public Signal getSignal() {

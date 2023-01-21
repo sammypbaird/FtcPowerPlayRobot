@@ -29,7 +29,8 @@ import java.util.List;
 @Autonomous(group = "drive")
 public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCameraOpenListener {
 
-	public static double DISTANCE = 23.75; // in
+	public static double FORWARD_DISTANCE = 26; // in
+	public static double LATERAL_DISTANCE = 24; // in
 	private OpenCvCamera camera;
 	Signal signal;
 
@@ -84,15 +85,15 @@ public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.Asyn
 		switch (signal) {
 			// defined by locations on page 46 of Game Maunal part 2
 			case ONE: // green
-				trajectories.add(drive.trajectoryBuilder(new Pose2d()).forward(DISTANCE).build());
-				trajectories.add(drive.trajectoryBuilder(new Pose2d()).strafeLeft(DISTANCE).build());
+				trajectories.add(drive.trajectoryBuilder(new Pose2d()).forward(FORWARD_DISTANCE).build());
+				trajectories.add(drive.trajectoryBuilder(new Pose2d()).strafeLeft(LATERAL_DISTANCE).build());
 				break;
 			case TWO: // purple
-				trajectories.add(drive.trajectoryBuilder(new Pose2d()).forward(DISTANCE).build());
+				trajectories.add(drive.trajectoryBuilder(new Pose2d()).forward(FORWARD_DISTANCE).build());
 				break;
 			case THREE: // orange
-				trajectories.add(drive.trajectoryBuilder(new Pose2d()).forward(DISTANCE).build());
-				trajectories.add(drive.trajectoryBuilder(new Pose2d()).strafeRight(DISTANCE).build());
+				trajectories.add(drive.trajectoryBuilder(new Pose2d()).forward(FORWARD_DISTANCE).build());
+				trajectories.add(drive.trajectoryBuilder(new Pose2d()).strafeRight(LATERAL_DISTANCE).build());
 				break;
 		}
 		return trajectories;
@@ -103,7 +104,7 @@ public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.Asyn
 		telemetry.addData("Status", "Webcam initialized");
 		telemetry.update();
 		//widescreen webcams are 16:9 ratio
-		camera.startStreaming(426, 240, OpenCvCameraRotation.UPRIGHT);
+		camera.startStreaming(432, 240, OpenCvCameraRotation.UPRIGHT);
 	}
 
 	@Override
