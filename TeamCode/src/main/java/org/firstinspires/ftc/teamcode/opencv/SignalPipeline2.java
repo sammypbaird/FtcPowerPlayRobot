@@ -30,15 +30,15 @@ public class SignalPipeline2 extends OpenCvPipeline
         int size = 30;
         Rect square = new Rect(((input.width() - size) / 2), (input.height() - size) / 2, size, size);
 
+        //blur the image
+        Mat blurredImage = new Mat();
+        Imgproc.GaussianBlur(input, blurredImage, new Size(10, 10), 0);
+
         //Draw a rectangle on the input image (just to help in previewing the image)
         Imgproc.rectangle(input, square, new Scalar(0, 255, 0), 1, 8, 0);
 
-        //blur the image
-        Mat blurredImage = new Mat();
-        Imgproc.GaussianBlur(input, blurredImage, new Size(6, 6), 0);
-
         //convert it to HSV
-        Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2HSV);
+        Imgproc.cvtColor(blurredImage, hsvMat, Imgproc.COLOR_RGB2HSV);
 
         //get the pixel in the middle
         double[] hsvValues = hsvMat.get(input.height() / 2, input.width() / 2);
@@ -52,7 +52,7 @@ public class SignalPipeline2 extends OpenCvPipeline
 
     private Signal getClosestSignal(double signalHue) {
         double closestHueDifference = 180;
-        Signal closestSignal = null;
+        Signal closestSignal = Signal.ONE;
         for (Signal s : Signal.values()) {
             double diff = Math.abs(s.getHue() - signalHue);
             if (diff < closestHueDifference) {
