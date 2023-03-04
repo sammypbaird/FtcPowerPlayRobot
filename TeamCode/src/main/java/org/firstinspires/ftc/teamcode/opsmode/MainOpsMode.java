@@ -80,12 +80,13 @@ public class MainOpsMode extends LinearOpMode {
 
     //All the numbers below should be found through calibration
     private static final int ENCODER_TIMEOUT = 5;
-    private static final int JUNCTION_ENCODING_SHORT = 3400;
-    private static final int JUNCTION_ENCODING_MEDIUM = 5500;
-    private static final int JUNCTION_ENCODING_TALL = 7900;
+    private static final int JUNCTION_ENCODING_SHORT = -2800;
+    private static final int JUNCTION_ENCODING_MEDIUM = -4230;
+    private static final int JUNCTION_ENCODING_TALL = -6300;
+
     private static final double CLAW_POSITION_OPEN = 0.4;
     private static final double CLAW_POSITION_CLOSED = 0.7;
-    private static final double WRIST_POSITION_LEVEL = 0.5;
+    private static final double WRIST_POSITION_LEVEL = 0.55;
     private static final double WRIST_POSITION_DOWN = 0.2;
     private static final double LIFT_MOTOR_SPEED = 1.0;
     private static final double DRIVE_SPEED = 0.6;
@@ -193,13 +194,15 @@ public class MainOpsMode extends LinearOpMode {
     }
 
     private void updateLift() {
-        //while right trigger is pressed, do manual control
+        //manual control
         if (Math.abs(gamepad2.left_stick_y) > 0.15) {
             // if (liftDrive.getCurrentPosition() <= JUNCTION_ENCODING_TALL && liftDrive.getCurrentPosition() >= 0) {
             liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftDrive.setPower(gamepad2.left_stick_y);
             // }
-        } else if (gamepad2.right_trigger > 0.5) {
+        }
+        //while right trigger is pressed, do manual control
+        else if (gamepad2.right_trigger > 0.5) {
             if (gamepad2.a)
                 liftDrive.setTargetPosition(0);
             else if (gamepad2.b)
