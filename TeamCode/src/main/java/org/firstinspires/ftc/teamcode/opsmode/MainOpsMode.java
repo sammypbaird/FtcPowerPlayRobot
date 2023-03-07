@@ -80,9 +80,9 @@ public class MainOpsMode extends LinearOpMode {
 
     //All the numbers below should be found through calibration
     private static final int ENCODER_TIMEOUT = 5;
-    private static final int JUNCTION_ENCODING_SHORT = -2800;
-    private static final int JUNCTION_ENCODING_MEDIUM = -4230;
-    private static final int JUNCTION_ENCODING_TALL = -6300;
+    private static final int JUNCTION_ENCODING_SHORT = 2800;
+    private static final int JUNCTION_ENCODING_MEDIUM = 4230;
+    private static final int JUNCTION_ENCODING_TALL = 6300;
 
     private static final double CLAW_POSITION_OPEN = 0.4;
     private static final double CLAW_POSITION_CLOSED = 0.7;
@@ -212,6 +212,7 @@ public class MainOpsMode extends LinearOpMode {
             else if (gamepad2.y)
                 liftDrive.setTargetPosition(-JUNCTION_ENCODING_TALL);
             liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            liftDrive.setPower(LIFT_MOTOR_SPEED);
         } else {
             liftDrive.setTargetPosition(liftDrive.getCurrentPosition());
             liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
