@@ -29,7 +29,7 @@ import java.util.List;
 @Autonomous(group = "drive")
 public class AutonomousOpsMode extends LinearOpMode implements OpenCvCamera.AsyncCameraOpenListener {
 
-	public static double FORWARD_DISTANCE = 26; // in
+	public static double FORWARD_DISTANCE = 25; // in
 	public static double LATERAL_DISTANCE = 24; // in
 	private OpenCvCamera camera;
 	Signal signal;

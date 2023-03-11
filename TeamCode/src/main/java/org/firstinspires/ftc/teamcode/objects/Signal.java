@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.objects;
 
 public enum Signal {
-    ONE(1, "Signal 1", "green",78),
-    TWO(2, "Signal 2", "purple",136),
-    THREE(3, "Signal 3", "orange",6);
+    ONE(1, "Signal 1", "green",65),
+    TWO(2, "Signal 2", "purple",125),
+    THREE(3, "Signal 3", "orange",17);
 
     private final int id;
     private final String name;
