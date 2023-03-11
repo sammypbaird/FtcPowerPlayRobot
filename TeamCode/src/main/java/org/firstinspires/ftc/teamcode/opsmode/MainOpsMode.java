@@ -123,6 +123,7 @@ public class MainOpsMode extends LinearOpMode {
         telemetry.update();
         waitForStart();
         runtime.reset();
+        claw.setPosition(CLAW_POSITION_CLOSED);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
